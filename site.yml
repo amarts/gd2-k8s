@@ -1,0 +1,20 @@
+---
+- name: Extend disks to prevent no space errors during deployment
+  hosts: all
+  become: true
+  gather_facts: false
+  tags: diskextend
+
+  tasks:
+    - name: Extend the root LV and FS to occupy remaining space
+      lvol:
+        vg: atomicos
+        lv: root
+        size: 100%FREE
+        resizefs: true
+
+
+- name: Deploy K8S
+  vars:
+    kubeconfig_localhost: true
+  import_playbook: "kubespray/cluster.yml"

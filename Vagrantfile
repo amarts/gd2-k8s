@@ -22,12 +22,7 @@ Vagrant.configure("2") do |config|
       end
       if i == 3
         ca.vm.provision :ansible do |ansible|
-          ansible.playbook = "ansible/extend-storage.yml"
-          ansible.become = true
-          ansible.limit = "all"
-        end
-        ca.vm.provision :ansible do |ansible|
-          ansible.playbook = "kubespray/cluster.yml"
+          ansible.playbook = "site.yml"
           ansible.become = true
           ansible.limit = "all"
           ansible.groups = {
