@@ -1,0 +1,12 @@
+---
+- hosts: all
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Extend the root FS to occupy remaining space
+      lvol:
+        vg: atomicos
+        lv: root
+        size: 100%FREE
+        resizefs: true
