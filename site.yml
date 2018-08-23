@@ -1,9 +1,15 @@
 ---
-- name: Extend disks to prevent no space errors during deployment
+- name: Pre-deploy bootstrapping
   hosts: all
   become: true
   gather_facts: false
-  tags: diskextend
+  tags: predeploy
+
+  vars:
+    kmods:
+      - dm_mirror
+      - dm_snapshot
+      - dm_thin_pool
 
   tasks:
     - name: Extend the root LV and FS to occupy remaining space
@@ -12,9 +18,39 @@
         lv: root
         size: 100%FREE
         resizefs: true
+      tags: diskextend
 
+    - name: Load required kernel modules
+      modprobe:
+        name: "{{ item }}"
+        state: present
+      with_items: "{{ kmods }}"
+
+    - name: Persist loaded modules
+      copy:
+        dest: "/etc/modules-load.d/gluster-{{ item }}.conf"
+        content: "{{ item }}"
+      with_items: "{{ kmods }}"
 
 - name: Deploy K8S
   vars:
     kubeconfig_localhost: true
+  tags: deployk8s
   import_playbook: "kubespray/cluster.yml"
+
+- name: Setup kubectl config on localhost
+  hosts: 127.0.0.1
+  connection: local
+  tags: copyconfig
+  gather_facts: false
+
+  tasks:
+    - name: Ensure ~/.kube is present
+      file:
+        path: ~/.kube
+        state: directory
+
+    - name: Copy generated kubectl config to ~/.kube/config
+      copy:
+        src: .vagrant/provisioners/ansible/inventory/artifacts/admin.conf
+        dest: ~/.kube/config
