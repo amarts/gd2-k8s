@@ -22,7 +22,7 @@ Vagrant.configure("2") do |config|
       end
       if i == 3
         ca.vm.provision :ansible do |ansible|
-          ansible.playbook = "site.yml"
+          ansible.playbook = "vagrant-playbook.yml"
           ansible.become = true
           ansible.limit = "all"
           ansible.groups = {
