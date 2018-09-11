@@ -9,8 +9,8 @@ Vagrant.configure("2") do |config|
 
   config.vm.box = "centos/atomic-host"
   (1..3).each do |i|
-    config.vm.define "ca#{i}" do |ca|
-      ca.vm.hostname = "ca#{i}"
+    config.vm.define "kube#{i}" do |ca|
+      ca.vm.hostname = "kube#{i}"
 
       ca.vm.provider :libvirt do |lv|
         lv.cpus = 2
@@ -26,9 +26,9 @@ Vagrant.configure("2") do |config|
           ansible.become = true
           ansible.limit = "all"
           ansible.groups = {
-            "etcd" => ["ca[1:3]"],
-            "kube-master" => ["ca[1:2]"],
-            "kube-node" => ["ca[1:3]"],
+            "etcd" => ["kube[1:3]"],
+            "kube-master" => ["kube[1:2]"],
+            "kube-node" => ["kube[1:3]"],
             "k8s-cluster:children" => ["kube-master", "kube-node"]
           }
         end

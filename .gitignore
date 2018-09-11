@@ -1,3 +1,4 @@
 .vagrant
 .envrc
 *.retry
+gcs-venv
