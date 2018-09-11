@@ -1,0 +1,85 @@
+---
+- name: Deploy GCS
+  hosts: kube-master[0]
+  become: true
+  gather_facts: false
+  vars:
+    kubectl: /usr/local/bin/kubectl
+
+  pre_tasks:
+    - name: Create a temporary kube configs directory
+      tempfile:
+        state: directory
+        prefix: gcs-configs
+      register: tempdir
+
+    - set_fact:
+        cachable: true
+        configs_dir: "{{ tempdir.path }}"
+
+    - name: Copy GCS configs over
+      synchronize:
+        src: ./gcs-configs/
+        dest: "{{ configs_dir }}"
+
+  post_tasks:
+    - name: Delete temporary configs directory
+      file:
+        path: "{{ configs_dir }}"
+        state: absent
+
+  tasks:
+    - name: Create GCS namespace
+      kube:
+        kubectl: "{{ kubectl }}"
+        file: "{{ configs_dir }}/gcs-namespace.yml"
+
+    - name: Deploy etcd-operator
+      kube:
+        kubectl: "{{ kubectl }}"
+        file: "{{ configs_dir }}/gcs-etcd-operator.yml"
+
+    - name: Wait for etcd-operator to become available
+      command: "{{ kubectl }} -ngcs -ojson get deployment etcd-operator"
+      register: etcdop_status
+      until: (etcdop_status.stdout|from_json).status.availableReplicas is defined and (etcdop_status.stdout|from_json).status.availableReplicas == 1
+      delay: 10
+      retries: 50
+
+    - name: Deploy the etcd-cluster
+      kube:
+        kubectl: "{{ kubectl }}"
+        file: "{{ configs_dir }}/gcs-etcd-cluster.yml"
+
+    - name: Wait for etcd-cluster to become available
+      command: "{{ kubectl }} -ngcs -ojson get etcdcluster etcd"
+      register: etcd_status
+      until: (etcd_status.stdout |from_json).status.members.ready is defined and (etcd_status.stdout|from_json).status.members.ready|length == 3
+      delay: 10
+      retries: 50
+
+    - name: Deploy the GD2 cluster
+      kube:
+        kubectl: "{{ kubectl }}"
+        file: "{{ configs_dir }}/gcs-gd2-cluster.yml"
+
+    - name: Wait for GD2 cluster to be up
+      command: "{{ kubectl }} -ngcs -ojson get daemonset glusterd2-cluster"
+      register: gd2_status
+      until: (gd2_status.stdout|from_json).status.numberAvailable is defined and (gd2_status.stdout|from_json).status.numberAvailable == 3
+      delay: 10
+      retries: 50
+
+    - name: Get glusterd2-client service
+      command: "{{ kubectl }} -ngcs -ojson get service glusterd2-client "
+      register: gd2_client_service
+
+    - name: Set gd2_client_endpoint
+      set_fact:
+        gd2_client_endpoint: "http://{{ (gd2_client_service.stdout|from_json).spec.clusterIP}}:24007"
+        cacheable: true
+
+    - name: Deploy CSI driver
+      kube:
+        kubectl: "{{ kubectl }}"
+        file: "{{ configs_dir }}/gcs-csi.yml"

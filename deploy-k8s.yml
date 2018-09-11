@@ -1,0 +1,26 @@
+---
+- name: Deploy K8S
+  import_playbook: "kubespray/cluster.yml"
+  vars:
+    dns_domain: "k8s.gluster"
+    dns_mode: "coredns"
+    kube_network_plugin: "flannel"
+    kubeconfig_localhost: true
+    local_release_dir: "/var/vagrant/temp"
+
+- name: Setup kubectl config on localhost
+  hosts: 127.0.0.1
+  connection: local
+  gather_facts: false
+  become: false
+
+  tasks:
+    - name: Ensure ~/.kube is present
+      file:
+        path: ~/.kube
+        state: directory
+
+    - name: Copy generated kubectl config to ~/.kube/config
+      copy:
+        src: .vagrant/provisioners/ansible/inventory/artifacts/admin.conf
+        dest: ~/.kube/config

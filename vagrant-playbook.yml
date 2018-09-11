@@ -3,7 +3,6 @@
   hosts: all
   become: true
   gather_facts: false
-  tags: predeploy
   vars:
     kmods:
       - dm_mirror
@@ -31,30 +30,8 @@
         content: "{{ item }}"
       with_items: "{{ kmods }}"
 
-- name: Deploy K8S
-  import_playbook: "kubespray/cluster.yml"
-  tags: deployk8s
-  vars:
-    dns_domain: "k8s.gluster"
-    dns_mode: "coredns"
-    kube_network_plugin: "flannel"
-    kubeconfig_localhost: true
-    local_release_dir: "/var/vagrant/temp"
+- import_playbook: "./deploy-k8s.yml"
 
-- name: Setup kubectl config on localhost
-  hosts: 127.0.0.1
-  connection: local
-  tags: copyconfig
-  gather_facts: false
-  become: false
+- import_playbook: "./deploy-gcs.yml"
 
-  tasks:
-    - name: Ensure ~/.kube is present
-      file:
-        path: ~/.kube
-        state: directory
-
-    - name: Copy generated kubectl config to ~/.kube/config
-      copy:
-        src: .vagrant/provisioners/ansible/inventory/artifacts/admin.conf
-        dest: ~/.kube/config
+- import_playbook: "./add-devices.yml"
