@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## This script sets the environment to allow GCS deployments using kubespray and ansible
+## This script sets up the environment to allow GCS deployments using kubespray and ansible
 
 DEP_NOT_FOUND=()
 function check_dep() {
@@ -33,7 +33,11 @@ if [[ "${DEP_NOT_FOUND[@]}" != "" ]]; then
   exit 1
 fi
 
-## First create a python virtualenv for kubespray requirements
+## Ensure kubespray submodule is present
+echo "Ensuring kubespray is present"
+git submodule --init --update --quiet
+
+## Create a python virtualenv for kubespray requirements
 ### REQUIRES: python-virtualenv installed for you system
 VENV="gcs-venv"
 echo "Creating a python virtualenv $VENV"
