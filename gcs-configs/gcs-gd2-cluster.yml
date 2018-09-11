@@ -1,6 +1,6 @@
 ---
-apiVersion: apps/v1
 kind: DaemonSet
+apiVersion: apps/v1
 metadata:
   name: glusterd2-cluster
   namespace: gcs
@@ -62,8 +62,8 @@ spec:
             path: "/usr/lib/modules"
 
 ---
-apiVersion: v1
 kind: Service
+apiVersion: v1
 metadata:
   name: glusterd2-client
   namespace: gcs
@@ -78,8 +78,8 @@ spec:
       targetPort: 24007
 
 ---
-apiVersion: v1
 kind: Service
+apiVersion: v1
 metadata:
   name: glusterd2-client-nodeport
   namespace: gcs
