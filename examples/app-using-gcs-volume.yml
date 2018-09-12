@@ -18,7 +18,7 @@ kind: Pod
 apiVersion: v1
 metadata:
   name: gcs-example
-  label:
+  labels:
     app: redis
 spec:
   containers:
@@ -27,7 +27,7 @@ spec:
     volumeMounts:
     - mountPath: /data
       name: gcs-example-volume
-  volums:
+  volumes:
     - name: gcs-example-volume
       persistentVolumeClaim:
         claimName: gcs-example-volume
