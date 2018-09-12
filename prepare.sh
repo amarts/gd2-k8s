@@ -23,6 +23,7 @@ if check_dep vagrant vagrant; then
 vagrant and vagrant-libvirt were found.
 For easier operation, ensure that libvirt has been configured to work without passwords.
 Ref: https://developer.fedoraproject.org/tools/vagrant/vagrant-libvirt.html
+
 EOF
   fi
 fi
@@ -46,6 +47,7 @@ virtualenv -q $VENV
 . $VENV/bin/activate
 echo "Installing requirements into $VENV"
 pip install -q -r ./kubespray/requirements.txt
+pip install -q jmespath
 echo
 
 cat <<EOF
