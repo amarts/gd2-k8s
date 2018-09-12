@@ -114,7 +114,7 @@ Once begin using the cluster once its up by either,
 If the Vagrant vms are restarted (say because of host reboot), the kubernete cluster cannot come back up. In such a case, reset the cluster and re-deploy kube and GCS.
 
 ```
-(gcs-venv) $ ansible-playbook --become kubespray/reset.yml
+(gcs-venv) $ ansible-playbook --become vagrant-reset.yml
 .
 .
 .
@@ -124,9 +124,13 @@ If the Vagrant vms are restarted (say because of host reboot), the kubernete clu
 .
 ```
 
-This will create a brand new cluster.
+This will create a brand new cluster. If this fails, destroy the vagrant environment and restart fresh.
 
-> Note that this currently does not work as the block devices that were added
-> to the glusterd2-cluster would not be reset. This leaves behind stale LVM VGs
-> causing new device adds to fail. For the time being destroy the local cluster
-> completely `vagrant destroy -f` and start with a fresh `vagrant up`.
+```
+(gcs-venv) $ vagrant destroy -f
+.
+.
+.
+(gcs-venv) $ vagrant up
+```
+
