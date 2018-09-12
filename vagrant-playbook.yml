@@ -3,6 +3,8 @@
   hosts: all
   become: true
   gather_facts: false
+  tags:
+    - predeploy
   vars:
     kmods:
       - dm_mirror
