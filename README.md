@@ -76,21 +76,21 @@ $ ./prepare.sh
 
 - Activate the virtualenv
 ```
-$ source gcs-env/bin/activate
-(gcs-env) $
+$ source gcs-venv/bin/activate
+(gcs-venv) $
 ```
 
 - Bring up the cluster. This will take a long time.
 
 ```
-(gcs-env) $ vagrant up
+(gcs-venv) $ vagrant up
 ```
 
 Once begin using the cluster once its up by either,
 - SSHing into one of the Kube nodes and running the `kubectl` commands in there
 
 ```
-(gcs-env) $ vagrant ssh kube1
+(gcs-venv) $ vagrant ssh kube1
 ```
 
 #### Resetting the cluster
@@ -98,11 +98,11 @@ Once begin using the cluster once its up by either,
 If the Vagrant vms are restarted (say because of host reboot), the kubernete cluster cannot come back up. In such a case, reset the cluster and re-deploy kube and GCS.
 
 ```
-(gcs-env) $ ansible-playbook --become kubespray/reset.yml
+(gcs-venv) $ ansible-playbook --become kubespray/reset.yml
 .
 .
 .
-(gcs-env) $ ansible-playbook --skip-tags predeploy --become vagrant-playbook.yml
+(gcs-venv) $ ansible-playbook --skip-tags predeploy --become vagrant-playbook.yml
 .
 .
 .
