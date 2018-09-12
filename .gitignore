@@ -2,3 +2,4 @@
 .envrc
 *.retry
 gcs-venv
+kubectl
