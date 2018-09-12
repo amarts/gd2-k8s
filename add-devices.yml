@@ -24,15 +24,9 @@
         url: "{{ gd2_client_endpoint }}/v1/peers"
       register: peers_resp
 
-    - debug:
-        var: peers_resp
-
     - name: Set gd2_peers fact
       set_fact:
         gd2_peers: "{{ peers_resp.json | json_query('[].id') }}"
-    - debug:
-        var: gd2_peers
-
 
     - name: Register devices
       uri:
