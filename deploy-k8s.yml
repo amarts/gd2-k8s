@@ -6,6 +6,7 @@
     dns_mode: "coredns"
     kube_network_plugin: "flannel"
     kubeconfig_localhost: true
+    kubectl_localhost: true
     local_release_dir: "/var/vagrant/temp"
 
 - name: Setup kubectl config on localhost

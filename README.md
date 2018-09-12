@@ -41,6 +41,22 @@ TODO: Convert to role
 
 This playbook combines all the above to provision the local cluster brought up by Vagrant
 
+## Helper scripts
+
+### prepare.sh
+
+This scripts prepares the local environement to run the deployment.
+
+### kubectl
+
+This script can be used to interact with the deployed kubernetes environment.
+
+```
+(gcs-venv) $ ./kubectl -ngcs get pods
+.
+.
+.
+```
 
 ## How to use
 

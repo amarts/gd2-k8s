@@ -1,0 +1,6 @@
+#!/bin/sh
+
+KUBECTL=$PWD/.vagrant/provisioners/ansible/inventory/artifacts/kubectl
+KUBECONFIG=$PWD/.vagrant/provisioners/ansible/inventory/artifacts/admin.conf
+
+$KUBECTL --kubeconfig=$KUBECONFIG "$@"
