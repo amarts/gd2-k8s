@@ -134,3 +134,13 @@ This will create a brand new cluster. If this fails, destroy the vagrant environ
 (gcs-venv) $ vagrant up
 ```
 
+### Deploying an app with GCS backed volume
+
+An example config is provided for creating a PersistentVolumeClaim against GCS and using the claim in an app, in `examples/app-using-gcs-volume.yml`
+
+Deploy it with,
+
+```
+(gcs-venv) $ ./kubectl create -f examples/app-using-gcs-volume.yml
+```
+
