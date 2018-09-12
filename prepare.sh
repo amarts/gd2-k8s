@@ -35,7 +35,8 @@ fi
 
 ## Ensure kubespray submodule is present
 echo "Ensuring kubespray is present"
-git submodule --init --update --quiet
+git submodule --quiet init
+git submodule --quiet update
 
 ## Create a python virtualenv for kubespray requirements
 ### REQUIRES: python-virtualenv installed for you system
