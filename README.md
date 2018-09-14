@@ -130,6 +130,11 @@ An example config is provided for creating a PersistentVolumeClaim against GCS a
 Deploy it with,
 
 ```
-(gcs-venv) $ ./kubectl create -f examples/app-using-gcs-volume.yml
-```
+(gcs-venv) $ vagrant ssh-config kube1 > ssh-config
+(gcs-venv) $ scp -F ssh-config examples/app-using-gcs-volume.yml kube1:gcs-volume.yml
+(gcs-venv) $ vagrant ssh kube1
+vagrant@kube1 ~$ kubectl create -f gcs-volume.yml
 
+vagrant@kube1 ~$ kubectl get pods
+vagrant@kube1 ~$ kubectl -wgcs get pods
+```
