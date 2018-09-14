@@ -47,17 +47,6 @@ This playbook combines all the above to provision the local cluster brought up b
 
 This scripts prepares the local environement to run the deployment.
 
-### kubectl
-
-This script can be used to interact with the deployed kubernetes environment. This script is generated after running the deploy-k8s.yml playbook.
-
-```
-(gcs-venv) $ ./kubectl -ngcs get pods
-.
-.
-.
-```
-
 ## How to use
 
 ### Requirements

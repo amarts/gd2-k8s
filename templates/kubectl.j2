@@ -1,6 +1,0 @@
-#!/bin/sh
-
-KUBECTL={{ inventory_dir }}/artifacts/kubectl
-KUBECONFIG={{ inventory_dir }}/artifacts/admin.conf
-
-$KUBECTL --kubeconfig=$KUBECONFIG "$@"

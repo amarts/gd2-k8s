@@ -1,24 +1,10 @@
 ---
 - name: Deploy K8S
   import_playbook: "kubespray/cluster.yml"
+  tags:
+    - skip
   vars:
     dns_mode: "coredns"
     kube_network_plugin: "flannel"
     kubeconfig_localhost: true
-    kubectl_localhost: true
     local_release_dir: "/var/vagrant/temp"
-
-- name: Create local kubectl script
-  hosts: all
-  gather_facts: false
-  become: false
-  tasks:
-  - name: Create kubectl script from template
-    template:
-      src: kubectl.j2
-      dest: ./kubectl
-      mode: 0755
-    run_once: true
-    delegate_to: localhost
-
-
